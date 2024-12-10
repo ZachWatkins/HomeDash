@@ -16,7 +16,6 @@ class EventSeeder extends Seeder
     public function run(): void
     {
         $path = database_path('seeders' . DIRECTORY_SEPARATOR . 'events*.json');
-        // Match the file name with a wildcard.
         $matches = glob($path);
         if (empty($matches)) {
             $this->command->error('File not found: ' . $path);
@@ -30,17 +29,13 @@ class EventSeeder extends Seeder
                 if (Event::where('name', $event['name'])->exists()) {
                     $skipped++;
                 } else {
-                    // Apply the timezone offset to the start and end dates if present.
-                    if (isset($event['timezone_offset'])) {
-                        $event['start_date'] = \Carbon\Carbon::parse($event['start_date'])->addMinutes($event['timezone_offset']);
-                        if (isset($event['end_date'])) {
-                            $event['end_date'] = \Carbon\Carbon::parse($event['end_date'])->addMinutes($event['timezone_offset']);
+                    // If the data includes a timezone attribute, convert the start_date and end_date to UTC from the given timezone.
+                    if (isset($event['timezone'])) {
+                        $event['start_date'] = convertFromTimezone($event['start_date'], $event['timezone']);
+                        if (isset($event['end_date']) && $event['end_date']) {
+                            $event['end_date'] = convertFromTimezone($event['end_date'], $event['timezone']);
                         }
-                    } elseif (isset($event['timezone'])) {
-                        $event['start_date'] = \Carbon\Carbon::parse($event['start_date'], $event['timezone']);
-                        if (isset($event['end_date'])) {
-                            $event['end_date'] = \Carbon\Carbon::parse($event['end_date'], $event['timezone']);
-                        }
+                        unset($event['timezone']);
                     }
                     Event::create($event);
                     $created++;
