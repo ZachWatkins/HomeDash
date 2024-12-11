@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use App\Models\Event;
 
 class EventFactory extends Factory
@@ -20,7 +19,7 @@ class EventFactory extends Factory
      */
     public function definition(): array
     {
-        $startDate = $this->faker->dateTime();
+        $startDate = $this->faker->dateTimeBetween('-5 years', '-1 year');
         return [
             'name' => $this->faker->name(100),
             'description' => $this->faker->text(255),
@@ -34,57 +33,5 @@ class EventFactory extends Factory
             'show_on_countdown' => $this->faker->boolean(),
             'is_trip' => $this->faker->boolean(),
         ];
-    }
-
-    /**
-     * Indicate that the event has a timezone of America/New_York.
-     */
-    public function eastern(): EventFactory
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'timezone' => 'America/New_York',
-                'timezone_offset' => '-04:00',
-            ];
-        });
-    }
-
-    /**
-     * Indicate that the event has a timezone of America/Los_Angeles.
-     */
-    public function pacific(): EventFactory
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'timezone' => 'America/Los_Angeles',
-                'timezone_offset' => '-07:00',
-            ];
-        });
-    }
-
-    /**
-     * Indicate that the event has a timezone of America/Chicago.
-     */
-    public function central(): EventFactory
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'timezone' => 'America/Chicago',
-                'timezone_offset' => '-05:00',
-            ];
-        });
-    }
-
-    /**
-     * Indicate that the event has a timezone of America/Denver.
-     */
-    public function mountain(): EventFactory
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'timezone' => 'America/Denver',
-                'timezone_offset' => '-06:00',
-            ];
-        });
     }
 }

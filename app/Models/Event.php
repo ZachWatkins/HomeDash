@@ -23,8 +23,6 @@ class Event extends Model
         'longitude',
         'city',
         'state',
-        'timezone',
-        'timezone_offset',
         'folder_name',
         'show_on_countdown',
         'is_trip',
@@ -37,8 +35,6 @@ class Event extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'start_date' => 'datetime',
-        'end_date' => 'datetime',
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
         'show_on_countdown' => 'boolean',
